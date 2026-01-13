@@ -707,9 +707,9 @@ jobs:
 
             echo "正在打susfs补丁"
             patch -p1 < 50_add_susfs_in_gki-${{ env.KANDROID_VERSION }}-${{ env.KERNEL_VERSION }}.patch || true
-            cd ./KernelSU
+            cd ../KernelSU
             patch -p1 < 10_enable_susfs_for_ksu.patch || true
-            cd ..
+            cd ../common
             echo "susfs_patch完成"
 
             # Revert
