@@ -646,7 +646,7 @@ jobs:
             cd ..
           fi
           git clone https://github.com/ShirkNeko/SukiSU_patch.git
-          git clone https://github.com/Numbersf/Action-Build.git
+          git clone https://github.com/wu17481748/Action-Build.git
           cd kernel_platform
           if [ "${{ github.event.inputs.SUSFS_META }}" != "-1" ]; then
             echo "正在拉取susfs补丁"
