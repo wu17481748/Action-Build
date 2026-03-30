@@ -805,7 +805,7 @@ jobs:
           sudo chmod 777 ${PATCH_DIR}/lxc-docker/auto-patch.sh
           sudo chmod 777 ${PATCH_DIR}/lxc-docker/open_gki_lxc_docker_config.sh
           echo "Patching kernel"
-          cd GKI_KernelSU_SUSFS/lxc_docker_patches/a13-5.15
+          cd ${GITHUB_WORKSPACE}/GKI_KernelSU_SUSFS/lxc_docker_patches/a13-5.15
           ${PATCH_DIR}/lxc-docker/auto-patch.sh ${GITHUB_WORKSPACE}/kernel_workspace/kernel_platform/common
           echo "Open kernel config"
           cd kernel_workspace/kernel_platform/common
