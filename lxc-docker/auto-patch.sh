@@ -1,11 +1,10 @@
 #!/bin/bash
-# auto-patch.sh - 自动应用文件夹中的所有补丁
+# auto-patch.sh - 自动应用文件夹中的所有补丁，记录失败项
 # 用法: ./auto-patch.sh <补丁文件夹> [内核源码目录]
-
-#set -e  # 发生错误立即退出
 
 PATCH_DIR="$1"
 KERNEL_DIR="${2:-.}"  # 默认当前目录为内核源码目录
+FAILED_PATCHES=()     # 数组记录失败的补丁
 
 # 参数检查
 if [ -z "$PATCH_DIR" ]; then
@@ -24,7 +23,7 @@ if [ ! -d "$KERNEL_DIR" ]; then
 fi
 
 # 切换到内核源码目录
-cd "$KERNEL_DIR"
+cd "$KERNEL_DIR" || exit 1
 
 # 检查 patch 命令是否可用
 if ! command -v patch &> /dev/null; then
@@ -43,8 +42,21 @@ fi
 # 依次应用每个补丁
 for patch_file in $patches; do
     echo "正在应用 $patch_file ..."
-    patch -p1 < "$patch_file"
-    echo "成功应用 $patch_file"
+    if patch -p1 < "$patch_file"; then
+        echo "成功应用 $patch_file"
+    else
+        echo "失败: $patch_file" >&2
+        FAILED_PATCHES+=("$patch_file")
+    fi
 done
 
-echo "所有补丁应用完成！"
+# 输出失败摘要
+if [ ${#FAILED_PATCHES[@]} -eq 0 ]; then
+    echo "所有补丁应用成功！"
+else
+    echo "以下补丁应用失败：" >&2
+    for f in "${FAILED_PATCHES[@]}"; do
+        echo "  $f" >&2
+    done
+    exit 1
+fi
