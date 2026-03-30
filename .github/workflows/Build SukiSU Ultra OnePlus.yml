@@ -799,6 +799,7 @@ jobs:
         run: |
           PATCH_DIR="${GITHUB_WORKSPACE}/kernel_workspace/Action-Build/"
           CONFIG_FILE=./arch/arm64/configs/gki_defconfig
+          pwd
           git clone https://github.com/natsumerinchan/GKI_KernelSU_SUSFS.git
           ls ${PATCH_DIR}
           sudo chmod 777 ${PATCH_DIR}/lxc-docker/auto-patch.sh
