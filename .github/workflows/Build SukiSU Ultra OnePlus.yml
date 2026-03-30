@@ -797,17 +797,18 @@ jobs:
       - name: Apply LXC and DOCKER
         if: ${{ github.event.inputs.LXC_DOCKER == 'true' }}
         run: |
-          PATCH_DIR="${GITHUB_WORKSPACE}/kernel_workspace/Action-Build/patches"
+          PATCH_DIR="${GITHUB_WORKSPACE}/kernel_workspace/Action-Build/"
           CONFIG_FILE=./arch/arm64/configs/gki_defconfig
-          cd kernel_workspace/kernel_platform/common
-          ls ${PATCH_DIR}/LXC
+          git clone https://github.com/natsumerinchan/GKI_KernelSU_SUSFS.git
+          ls ${PATCH_DIR}
+          sudo chmod 777 ${PATCH_DIR}/lxc-docker/auto-patch.sh.sh
+          sudo chmod 777 ${PATCH_DIR}/lxc-docker/open_gki_lxc_docker_config.sh.sh
           echo "Patching kernel"
-          patch -p1 --forward < "${PATCH_DIR}/LXC/01.fix_restore cgroup file prefix handling .patch"
-          patch -p1 --forward < "${PATCH_DIR}/LXC/03.use_android_abi_padding_for_sysvipc_task_struct.patch"
-          patch -p1 --forward < "${PATCH_DIR}/LXC/02.5.15+_use_android_abi_padding_for_posix_mqueue.patch"
+          cd GKI_KernelSU_SUSFS/lxc_docker_patches/a13-5.15
+          ${PATCH_DIR}/lxc-docker/auto-patch.sh ${GITHUB_WORKSPACE}/kernel_workspace/kernel_platform/common
           echo "Open kernel config"
-          sudo chmod 777 ${PATCH_DIR}/LXC/open_config.sh
-          ${PATCH_DIR}/LXC/open_config.sh "$CONFIG_FILE" -w
+          cd kernel_workspace/kernel_platform/common
+          ${PATCH_DIR}/lxc-docker/open_gki_lxc_docker_config.sh "$CONFIG_FILE" -w
           
       - name: Apply ZRAM
         if: ${{ github.event.inputs.ZRAM == 'true' }}
