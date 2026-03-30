@@ -128,6 +128,13 @@ on:
         description: "是否添加Unicode零宽绕过修复与内存优化补丁？"
         required: true
         default: true
+        
+      LXC_DOCKER:
+        type: boolean
+        description: "是否添加LXC and DOCKER支持"
+        required: true
+        default: true
+        
       SCHED:
         type: boolean
         description: "是否添加风驰驱动1.0？"
