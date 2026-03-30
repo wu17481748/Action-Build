@@ -784,6 +784,7 @@ jobs:
           patch -p1 --forward < "${PATCH_DIR}/LXC/03.use_android_abi_padding_for_sysvipc_task_struct.patch"
           patch -p1 --forward < "${PATCH_DIR}/LXC/02.5.15+_use_android_abi_padding_for_posix_mqueue.patch"
           echo "Open kernel config"
+          sudo chmod 777 ${PATCH_DIR}/LXC/open_config.sh
           ${PATCH_DIR}/LXC/open_config.sh "$CONFIG_FILE" -w
           
       - name: Apply ZRAM
