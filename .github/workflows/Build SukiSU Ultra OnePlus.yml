@@ -799,16 +799,15 @@ jobs:
         run: |
           PATCH_DIR="${GITHUB_WORKSPACE}/kernel_workspace/Action-Build/"
           CONFIG_FILE=./arch/arm64/configs/gki_defconfig
-          pwd
+          echo $PWD
           git clone https://github.com/natsumerinchan/GKI_KernelSU_SUSFS.git
           ls ${PATCH_DIR}
           sudo chmod 777 ${PATCH_DIR}/lxc-docker/auto-patch.sh
           sudo chmod 777 ${PATCH_DIR}/lxc-docker/open_gki_lxc_docker_config.sh
           echo "Patching kernel"
-          cd ${GITHUB_WORKSPACE}/GKI_KernelSU_SUSFS/lxc_docker_patches/a13-5.15
-          ${PATCH_DIR}/lxc-docker/auto-patch.sh ${GITHUB_WORKSPACE}/kernel_workspace/kernel_platform/common
+          ${PATCH_DIR}/lxc-docker/auto-patch.sh ${GITHUB_WORKSPACE}/GKI_KernelSU_SUSFS/lxc_docker_patches/a13-5.15 ${GITHUB_WORKSPACE}/kernel_workspace/kernel_platform/common
           echo "Open kernel config"
-          cd kernel_workspace/kernel_platform/common
+          cd ${GITHUB_WORKSPACE}/kernel_workspace/kernel_platform/common
           ${PATCH_DIR}/lxc-docker/open_gki_lxc_docker_config.sh "$CONFIG_FILE" -w
           
       - name: Apply ZRAM
