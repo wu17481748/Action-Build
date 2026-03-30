@@ -2,7 +2,7 @@
 # auto-patch.sh - 自动应用文件夹中的所有补丁
 # 用法: ./auto-patch.sh <补丁文件夹> [内核源码目录]
 
-set -e  # 发生错误立即退出
+#set -e  # 发生错误立即退出
 
 PATCH_DIR="$1"
 KERNEL_DIR="${2:-.}"  # 默认当前目录为内核源码目录
