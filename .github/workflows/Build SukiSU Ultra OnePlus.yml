@@ -133,7 +133,13 @@ on:
         type: boolean
         description: "是否添加LXC and DOCKER支持"
         required: true
-        default: true
+        default: false
+
+      Droid_OSS:
+        type: boolean
+        description: "是否添加Droid_OSS支持"
+        required: true
+        default: false
         
       SCHED:
         type: boolean
@@ -324,6 +330,7 @@ jobs:
           echo "Selected ZRAM: ${{ github.event.inputs.ZRAM }}"
           echo "Selected UNICODE_BYPASS: ${{ github.event.inputs.UNICODE_BYPASS }}"
           echo "Selected LXC_DOCKER: ${{ github.event.inputs.LXC_DOCKER }}"
+          echo "Selected Droid_OSS: ${{ github.event.inputs.Droid_OSS }}"
           echo "-----------------------"
 
       - name: Check Disk Space
@@ -771,6 +778,21 @@ jobs:
             patch -p1 --forward < "${PATCH_DIR}/unicode_bypass_fix_6.1+.patch"
           fi
 
+
+      - name: Apply Droidspaces-OSS
+        if: ${{ github.event.inputs.Droid_OSS == 'true' }}
+        run: |
+          PATCH_DIR="${GITHUB_WORKSPACE}/kernel_workspace/Action-Build/patches"
+          CONFIG_FILE=./arch/arm64/configs/gki_defconfig
+          cd kernel_workspace/kernel_platform/common
+          ls ${PATCH_DIR}/LXC
+          echo "Patching kernel"
+          patch -p1 --forward < "${PATCH_DIR}/LXC/01.fix_restore cgroup file prefix handling .patch"
+          patch -p1 --forward < "${PATCH_DIR}/LXC/03.use_android_abi_padding_for_sysvipc_task_struct.patch"
+          patch -p1 --forward < "${PATCH_DIR}/LXC/02.5.15+_use_android_abi_padding_for_posix_mqueue.patch"
+          echo "Open kernel config"
+          sudo chmod 777 ${PATCH_DIR}/LXC/open_droidspaces_config.sh
+          ${PATCH_DIR}/LXC/open_droidspaces_config.sh "$CONFIG_FILE" -w
 
       - name: Apply LXC and DOCKER
         if: ${{ github.event.inputs.LXC_DOCKER == 'true' }}
